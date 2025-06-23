@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>مساعد وظائف القصيم</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #0077b6;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      padding: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      background-color: #023e8a;
+    }
+    #chatBox {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .message {
+      max-width: 70%;
+      padding: 12px 15px;
+      border-radius: 15px;
+      line-height: 1.3;
+    }
+    .userMsg {
+      background-color: #90e0ef;
+      color: #000;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+    .botMsg {
+      background-color: #0077b6;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+    #inputArea {
+      display: flex;
+      padding: 10px;
+      background-color: #023e8a;
+    }
+    #inputArea input {
+      flex: 1;
+      padding: 12px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 25px 0 0 25px;
+      outline: none;
+    }
+    #inputArea button {
+      background-color: #90e0ef;
+      border: none;
+      padding: 0 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 0 25px 25px 0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #inputArea button:hover {
+      background-color: #48cae4;
+    }
+  </style>
+</head>
+<body>
+
+<header>مساعد وظائف القصيم</header>
+
+<div id="chatBox"></div>
+
+<div id="inputArea">
+  <input type="text" id="userInput" placeholder="اكتب سؤالك هنا..." />
+  <button onclick="sendMessage()">إرسال</button>
+</div>
+
+<script>
+  const chatBox = document.getElementById('chatBox');
+  const userInput = document.getElementById('userInput');
+
+  function appendMessage(text, className) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', className);
+    msgDiv.textContent = text;
+    chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    appendMessage(text, 'userMsg');
+    userInput.value = '';
+    appendMessage('جاري الرد...', 'botMsg');
+
+    try {
+      const response = await fetch("", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await response.json();
+      chatBox.lastChild.remove();
+      appendMessage(data.response, 'botMsg');
+    } catch (e) {
+      chatBox.lastChild.remove();
+      appendMessage('حدث خطأ، حاول لاحقاً.', 'botMsg');
+    }
+  }
+
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
+
+</body>
+</html>
