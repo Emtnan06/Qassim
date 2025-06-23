@@ -12,8 +12,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ضع هنا مفتاح OpenAI الخاص بك
-openai.api_key = "kR1TZRhEV88RmNDj44PJYUhiulaOs7cT"
+import os
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 @app.post("/api/chat")
 async def chat(request: Request):
