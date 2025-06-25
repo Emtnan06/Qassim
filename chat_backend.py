@@ -1,13 +1,15 @@
 from mistralai import Mistral
 import os
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware  # **هنا**
 
 app = FastAPI()
 
+# هنا تضيف إعدادات CORS بالشكل الصحيح:
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://emtnan06.github.io"],  # اسم دومين الفرونت عندك بالضبط
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
